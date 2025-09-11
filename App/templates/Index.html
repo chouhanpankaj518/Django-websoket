@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="demo"></h1>
+    <script>
+        let ws = new WebSocket('ws://127.0.0.1:8000/ws/chat/')
+        ws.onopen = function(){
+            console.log("Connected to WebSocket Server")
+            ws.send("Hello, WebSocket Server!")
+    }
+    ws.onmessage = function(event){
+        console.log("Received message: " + event.data)
+        let data = JSON.parse(event.data)
+        document.getElementById("demo").innerHTML = data.count
+    }
+    ws.onclose = function(event){
+        console.log("Disconnected from WebSocket Server")
+    }
+    ws.onerror = function(error){
+        console.error("WebSocket Error: " + error)
+    }
+</script>
+</body>
+
+</html>
