@@ -7,24 +7,39 @@
 </head>
 <body>
     <h1 id="demo"></h1>
-    <script>
+    
+    <textarea name="" id="txt-message" rows="10" cols="50"></textarea>
+    <input type="text" id="txt-input" size="100">
+    <button id="btn-send">Send</button>
+</body>
+<script>
         let ws = new WebSocket('ws://127.0.0.1:8000/ws/chat/')
         ws.onopen = function(){
             console.log("Connected to WebSocket Server")
-            ws.send("Hello, WebSocket Server!")
     }
+
     ws.onmessage = function(event){
         console.log("Received message: " + event.data)
         let data = JSON.parse(event.data)
         document.getElementById("demo").innerHTML = data.count
     }
+
     ws.onclose = function(event){
         console.log("Disconnected from WebSocket Server")
     }
+
     ws.onerror = function(error){
         console.error("WebSocket Error: " + error)
     }
+
+
+    document.getElementById("btn-send").onclick= function(event){
+        let message = document.getElementById("txt-message")
+        const input_mesage = message.value
+        ws.send(JSON.stringify({'msg':input_mesage}))
+        message.value = " "
+    }
+
 </script>
-</body>
 
 </html>
