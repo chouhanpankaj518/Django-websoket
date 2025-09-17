@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h1 id="demo"></h1>
-
+     {% for chat in chats %}
+     {{ chat.group }} <br>
+     {% endfor %}
     <textarea name="" id="txt-message" rows="10" cols="50"></textarea>
     <input type="text" id="txt-input" size="50">
     <button id="btn-send">Send</button>
     {{ groupname|json_script:"group" }}
 </body>
+
 <script>
 
        let group_name = JSON.parse(document.getElementById("group").textContent);
@@ -43,7 +47,6 @@
         console.error("WebSocket Error: " + error)
     }
 
-
     document.getElementById("btn-send").onclick= function(event){
         let message = document.getElementById("txt-input")
         const input_message = message.value
@@ -51,7 +54,5 @@
         message.value = ""
     }
 </script>
-
-
 
 </html>
