@@ -7,21 +7,32 @@
 </head>
 <body>
     <h1 id="demo"></h1>
-    
+
     <textarea name="" id="txt-message" rows="10" cols="50"></textarea>
-    <input type="text" id="txt-input" size="100">
+    <input type="text" id="txt-input" size="50">
     <button id="btn-send">Send</button>
+    {{ groupname|json_script:"group" }}
 </body>
 <script>
-        let ws = new WebSocket('ws://127.0.0.1:8000/ws/chat/')
-        ws.onopen = function(){
-            console.log("Connected to WebSocket Server")
+
+       let group_name = JSON.parse(document.getElementById("group").textContent);
+       let ws = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/chat/'
+        + group_name
+        + '/'
+       );
+      // let ws = new WebSocket('ws://127.0.0.1:8000/ws/chat/') 
+
+    ws.onopen = function(){
+        console.log("Connected to WebSocket Server")
     }
 
-    ws.onmessage = function(event){
-        console.log("Received message: " + event.data)
-        let data = JSON.parse(event.data)
-        document.getElementById("demo").innerHTML = data.count
+    ws.onmessage = function(event){ // backend message received here
+        console.log("Received message: " + event.data) 
+        let data = JSON.parse(event.data)   // string → object
+        document.getElementById("txt-message").value += data.message + "\n"
     }
 
     ws.onclose = function(event){
@@ -34,12 +45,13 @@
 
 
     document.getElementById("btn-send").onclick= function(event){
-        let message = document.getElementById("txt-message")
-        const input_mesage = message.value
-        ws.send(JSON.stringify({'msg':input_mesage}))
-        message.value = " "
+        let message = document.getElementById("txt-input")
+        const input_message = message.value
+        ws.send(JSON.stringify({msg : input_message})) // object → string
+        message.value = ""
     }
-
 </script>
+
+
 
 </html>

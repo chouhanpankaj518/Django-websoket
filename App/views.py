@@ -1,5 +1,5 @@
 from django.shortcuts import render
 
 # Create your views here.
-def index(request):
-    return render(request , 'Index.html')
+def index(request,group_name):
+     return render(request , 'Index.html',{'groupname':group_name})
